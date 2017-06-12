@@ -61,8 +61,7 @@ void Draw()
 
 	for (int i = 0; i < width + 2; i++)
 		printf("#");
-	printf("\n");
-	printf("Score: %d", score);
+	printf("\nScore: %d", score);
 }
 void Input()
 {
@@ -145,6 +144,7 @@ void Logic()
 }
 int main()
 {
+	system("color a0");
 	Setup();
 	while (!gameOver)
 	{
@@ -154,7 +154,8 @@ int main()
 		Sleep(10); //sleep(10);
 	}
 
-	printf("\nGame over!\n");
+	system("color c0");
+	printf("\n            Game over!\n");
 	Sleep(2000);
 	system("pause");
 
