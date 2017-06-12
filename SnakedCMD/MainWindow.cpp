@@ -22,7 +22,7 @@ void Setup()
 }
 void Draw()
 {
-	system("cls"); //system("clear");
+	system("cls"); //system("clear"); for linux.
 	for (int i = 0; i < width + 2; i++)
 		printf("#");
 	printf("\n");
@@ -122,9 +122,13 @@ void Logic()
 			break;
 	}
 
-	if (x > width || x < 0 || y > height || y < 0)
-		gameOver = true;
 
+	// Wall collision
+
+	// if (x > width || x < 0 || y > height || y < 0)
+	// 	gameOver = true;
+
+	// Wall teleportation to the other side
 	if (x >= width) x = 0; else if (x < 0) x = width - 1;
 	if (y >= height) y = 0; else if (y < 0) y = height - 1;
 
@@ -142,7 +146,6 @@ void Logic()
 }
 int main()
 {
-
 	Setup();
 	while (!gameOver)
 	{
