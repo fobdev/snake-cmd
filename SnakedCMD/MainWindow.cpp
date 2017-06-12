@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 bool gameOver;
-const int width = 20;
+const int width = 30;
 const int height = 20;
 int x, y, fruitX, fruitY, score;
 int tailX[100], tailY[100];
@@ -124,13 +124,12 @@ void Logic()
 
 
 	// Wall collision
+	if (x > width || x < 0 || y > height || y < 0)
+		gameOver = true;
 
-	// if (x > width || x < 0 || y > height || y < 0)
-	// 	gameOver = true;
-
-	// Wall teleportation to the other side
-	if (x >= width) x = 0; else if (x < 0) x = width - 1;
-	if (y >= height) y = 0; else if (y < 0) y = height - 1;
+	// Wall teleport to the other side
+	// if (x >= width) x = 0; else if (x < 0) x = width - 1;
+	// if (y >= height) y = 0; else if (y < 0) y = height - 1;
 
 	for (int i = 0; i < nTail; i++)
 		if (tailX[i] == x && tailY[i] == y)
@@ -155,11 +154,9 @@ int main()
 		Sleep(10); //sleep(10);
 	}
 
-	if (gameOver)
-	{
-		printf("\nGame over!\n");
-		system("pause");
-	}
+	printf("\nGame over!\n");
+	Sleep(2000);
+	system("pause");
 
 	return 0;
 }
