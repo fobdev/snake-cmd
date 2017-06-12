@@ -1,7 +1,7 @@
-#include <cstdlib>
 #include <conio.h>
 #include <windows.h>
 #include <stdio.h>
+
 bool gameOver;
 const int width = 20;
 const int height = 20;
