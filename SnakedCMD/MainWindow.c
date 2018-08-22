@@ -8,8 +8,33 @@ const int height = 20;
 int x, y, fruitX, fruitY, score;
 int tailX[100], tailY[100];
 int nTail;
+
 enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN };
+enum mode {NORMAL, WALL};
+
 eDirecton dir;
+
+
+int ModeSelect()
+{
+	int g_mode = NULL;
+	printf("Select your mode\n[1] - Normal\n[2] - No Wall Collision\n\n$-");
+	switch(_getch()){
+	case '1':
+		g_mode = NORMAL;
+		break;
+	case '2':
+		g_mode = WALL;
+		break;
+	default:
+		system("cls");
+		ModeSelect();
+		break;
+	}
+
+	return g_mode;
+}
+
 void Setup()
 {
 	gameOver = false;
@@ -20,9 +45,10 @@ void Setup()
 	fruitY = rand() % height;
 	score = 0;
 }
+
 void Draw()
 {
-	system("cls"); //system("clear"); for linux.
+	system("cls"); 
 	for (int i = 0; i < width + 2; i++)
 		printf("#");
 	printf("\n");
@@ -69,26 +95,30 @@ void Input()
 	{
 		switch (_getch())
 		{
-			case 'a':
-				dir = LEFT;
-				break;
-			case 'd':
-				dir = RIGHT;
-				break;
-			case 'w':
-				dir = UP;
-				break;
-			case 's':
-				dir = DOWN;
-				break;
-			case 'x':
-				gameOver = true;
-				break;
+		case 'a':
+			dir = LEFT;
+			break;
+		case 'd':
+			dir = RIGHT;
+			break;
+		case 'w':
+			dir = UP;
+			break;
+		case 's':
+			dir = DOWN;
+			break;
+		case 'x':
+			gameOver = true;
+			break;
 		}
 	}
 }
-void Logic()
+void Logic(int game_mode)
 {
+
+	enum orientation {UP, DOWN, LEFT, RIGHT};
+	int current_orientation = NULL;
+
 	int prevX = tailX[0];
 	int prevY = tailY[0];
 	int prev2X, prev2Y;
@@ -105,30 +135,49 @@ void Logic()
 	}
 	switch (dir)
 	{
-		case LEFT:
-			x--;
-			break;
-		case RIGHT:
-			x++;
-			break;
-		case UP:
-			y--;
-			break;
-		case DOWN:
-			y++;
-			break;
-		default:
-			break;
+	case LEFT:
+		{
+			current_orientation = orientation::LEFT;
+			if(current_orientation != orientation::RIGHT)
+				x--;
+		}
+		break;
+	case RIGHT:
+		{
+			current_orientation = orientation::RIGHT;
+			if(current_orientation != orientation::LEFT)
+				x++;
+		}
+		break;
+	case UP:
+		{
+			current_orientation = orientation::UP;
+			if(current_orientation != orientation::DOWN)
+				y--;
+		}
+		break;
+	case DOWN:
+		{
+			current_orientation = orientation::DOWN;
+			if(current_orientation != orientation::UP)
+				y++;
+		}
+		break;
+	default:
+		break;
 	}
 
+	if(game_mode == NORMAL) // Wall collision mode ( NORMAL )
+	{
+		if (x > width || x < 0 || y > height || y < 0)
+			gameOver = true;
 
-	// Wall collision
-	if (x > width || x < 0 || y > height || y < 0)
-		gameOver = true;
-
-	// Wall teleport to the other side
-	// if (x >= width) x = 0; else if (x < 0) x = width - 1;
-	// if (y >= height) y = 0; else if (y < 0) y = height - 1;
+	}
+	else if (game_mode == WALL) // No Wall Collision mode ( WALL )
+	{
+		if (x >= width) x = 0; else if (x < 0) x = width - 1;
+		if (y >= height) y = 0; else if (y < 0) y = height - 1;
+	}
 
 	for (int i = 0; i < nTail; i++)
 		if (tailX[i] == x && tailY[i] == y)
@@ -146,11 +195,12 @@ int main()
 {
 	system("color a0");
 	Setup();
+	int current_mode = ModeSelect();
 	while (!gameOver)
 	{
 		Draw();
 		Input();
-		Logic();
+		Logic(current_mode);
 		Sleep(10); //sleep(10);
 	}
 
